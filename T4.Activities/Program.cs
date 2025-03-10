@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.ConstrainedExecution;
+using System.Text.RegularExpressions;
 using T4.Activitats;
 using T4.Activities.Tools;
 
@@ -13,15 +14,41 @@ internal class Program
 
         Console.WriteLine("********** T4.Activitats **********");
 
-        //Ex1();
-        //Ex2();
-        Ex5();
-        Ex6();
 
-    }
-    public static void Ex1()
+		Console.WriteLine("*** T4.1");
+		Ex1();
+        Console.WriteLine("*** T4.2");
+		Ex2();
+		Console.WriteLine("*** T4.3");
+		Ex3();
+		Console.WriteLine("*** T4.5");
+		Ex5();
+		Console.WriteLine("*** T4.6");
+		Ex6();
+		Console.WriteLine("*** T4.7");
+		Ex7();
+		Console.WriteLine("*** T4.8");
+		Ex8();
+		Console.WriteLine("*** T4.9");
+		Ex9();
+
+		/*** Exercicis de Delegates al Repo de teoria del modul ***/
+
+		Console.WriteLine("*** T4.14");
+		Ex14();
+		Console.WriteLine("*** T4.16");
+		Ex16();
+		Console.WriteLine("*** T4.18");
+		Ex18();
+		Console.WriteLine("*** T4.26");
+		Ex26();
+		Console.WriteLine("*** T4.28");
+		Ex28();
+
+	}
+
+	public static void Ex1()
     {
-        Console.WriteLine("*** T4.1");
         Pair<string, int> pair1 = new Pair<string, int>("Hola", 3);
 
         Console.WriteLine("Pair1 {0}", pair1.ToString());
@@ -36,7 +63,6 @@ internal class Program
     {
         const string extiInput = "0Exit";
         string s;
-        Console.WriteLine("*** T4.2");
 
         ArrayList arrayList = new ArrayList();
 
@@ -55,7 +81,6 @@ internal class Program
     public static void Ex3()
     {
         const string extiInput = "0Exit";
-        Console.WriteLine("*** T4.3");
         Dictionary<string, int> edats = new Dictionary<string, int>();
         string s;
         do
@@ -76,7 +101,6 @@ internal class Program
 	public static void Ex5()
 	{
 		const string extiInput = "0Exit";
-		Console.WriteLine("*** T4.5");
 		Console.WriteLine("Introdueix una llista de nombres enters separats per espais:");
 		string entrada = Console.ReadLine(); // Llegim l'entrada com a string
 
@@ -142,17 +166,17 @@ internal class Program
 		// 3️ Eliminar el número 42 i el valor true
 		llista.Remove(42);
 		llista.Remove(true);
-		Console.WriteLine("\nDesprés d'eliminar 42 i true:");
+		Console.WriteLine("\nDespres d'eliminar 42 i true:");
 		CollectionTools.PrintCollection(llista);
 
 		// 4️ Inserir "Pere" a la segona posició (índex 1)
 		llista.Insert(1, "Pere");
-		Console.WriteLine("\nDesprés d'inserir 'Pere' a la segona posició:");
+		Console.WriteLine("\nDespres d'inserir 'Pere' a la segona posicio:");
 		CollectionTools.PrintCollection(llista);
 
 		// 5️ Comprovar si "Anna" està a la llista
 		bool contéAnna = llista.Contains("Anna");
-		Console.WriteLine($"\nLa llista conté 'Anna'? {contéAnna}");
+		Console.WriteLine($"\nLa llista conte 'Anna'? {contéAnna}");
 
 		// 6️ Convertir l'ArrayList a un string[]
 		string[] array = llista.OfType<string>().ToArray();
@@ -213,7 +237,7 @@ internal class Program
 			{ "Pau", 22 }
 		};
 
-		Console.WriteLine("📌 Diccionari inicial:");
+		Console.WriteLine("Diccionari inicial:");
 		CollectionTools.PrintCollection(estudiants, "anys");
 
 		Console.Write("\nIntrodueix un nom per buscar: ");
@@ -225,12 +249,124 @@ internal class Program
 		}
 		else
 		{
-			Console.WriteLine($"X {nom} no es troba al diccionari.");
+			Console.WriteLine($"{nom} no es troba al diccionari.");
 		}
 
 		estudiants.Remove("Laura");
-		Console.WriteLine("\n📌 Després d'eliminar 'Laura':");
+		Console.WriteLine("\nDespres d'eliminar 'Laura':");
 		CollectionTools.PrintCollection(estudiants, "anys");
 	}
 
+	/// <summary>
+	/// Donada una llista de números, escriu un programa que calculi la suma de tots els elements.
+	/// </summary>
+	private static void Ex14()
+	{
+		List<int> numeros = new List<int> { 1, 2, 3, 4, 5 };
+
+		Console.Write("Calcul de la suma de la llista: ");
+		Console.WriteLine(string.Join(", ", numeros.Select(num => num.ToString())));
+
+		int suma = numeros.Aggregate((x, y) => x + y);
+
+		Console.WriteLine($"La suma de tots els elements es: {suma}");
+
+	}
+
+	/// <summary>
+	/// Donat un array de strings, converteix-ho en una llista i mostra els elements de la llista.
+	/// </summary>
+	private static void Ex16()
+	{
+		string[] arrayStrings = { "Hola", "Mon", "C#", "Llistes" };
+
+		// Convertir l'array en una llista de dos formes diferents
+		List<string> llistaStrings = new List<string>(arrayStrings);
+
+		List<string> llistaStrings2 = arrayStrings.ToList();
+
+		llistaStrings.ForEach(str => Console.WriteLine(str));
+	}
+
+	/// <summary>
+	/// Crea un diccionari que emmagatzemi informació sobre empleats (nom i salari) i mostri la informació.
+	/// </summary>
+	private static void Ex17()
+	{
+		Dictionary<string, decimal> empleats = new Dictionary<string, decimal>
+		{
+			{ "Joan", 2500.50m },
+			{ "Maria", 3000.75m },
+			{ "Pere", 2800.00m },
+			{ "Anna", 3200.25m }
+		};
+
+		Console.WriteLine("Llista d'empleats i els seus salaris:");
+
+		// Diccionari es IEnumerable, es pot iterar:
+		foreach (var empleat in empleats)
+		{
+			Console.WriteLine($"Nom: {empleat.Key}, Salari: {empleat.Value}€");
+		}
+	}
+
+	/// <summary>
+	/// Donada una llista de números, elimina els elements que siguin majors que un valor específic.
+	/// </summary>
+	private static void Ex18()
+	{
+		List<int> numeros = new List<int> { 5, 10, 15, 20, 25, 30 };
+
+		int llindar = 12;
+
+		// Crear una nova llista filtrada
+		List<int> llistaFiltrada = numeros.Where(num => num <= llindar).ToList();
+
+		Console.WriteLine("Nova llista despres de filtrar:");
+
+		llistaFiltrada.ForEach(str => Console.WriteLine(str));
+	}
+
+	/// <summary>
+	/// Implementa una funció que validi si una cadena és un correu electrònic vàlid. Un correu electrònic vàlid ha de complir el seu format
+	/// </summary>
+	private static void Ex26()
+	{
+		Console.WriteLine(IsValidEmail("usuari@gmail.com"));  
+		Console.WriteLine(IsValidEmail("usuari@gmail"));      
+		Console.WriteLine(IsValidEmail("user.name@domain.org")); 
+		Console.WriteLine(IsValidEmail("user@sub.domain.com")); 
+		Console.WriteLine(IsValidEmail("user@@domain.com")); 
+		Console.WriteLine(IsValidEmail("user@domain.")); 
+	}
+
+	static bool IsValidEmail(string email)
+	{
+		string pattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+		return Regex.IsMatch(email, pattern);
+	}
+
+	private static void Ex28()
+	{
+		string text = "Avui es el dia 12 del mes 02 de l'any 2024";
+
+		List<int> numeros = ExtractNumbers(text);
+
+		Console.WriteLine($"Numeros en el text: [{string.Join(", ", numeros)}]");
+	}
+
+	private static List<int> ExtractNumbers(string input)
+	{
+		List<int> numeros = new List<int>();
+		string pattern = @"\d+";  // Cerca un o mes digits consecutius
+
+		MatchCollection coincidencies = Regex.Matches(input, pattern);
+
+		foreach (Match match in coincidencies)
+		{
+			numeros.Add(int.Parse(match.Value)); 
+		}
+
+		return numeros;
+	}
 }
